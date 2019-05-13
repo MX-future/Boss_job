@@ -60,11 +60,41 @@ https.get(url,function(res){
 });
 
 
-
-/* request方法
+/*
+//request方法
 request(url,function(err,res,body){
     if(!err && res.statusCode == 200){
-        console.log(body);
+        //console.log(body);
+        //解析DOM字符串
+        var $ = cheerio.load(body);
+        //获取职位列表ul标签
+        var joblist = $('.job-list ul');
+        //console.log(joblist);
+
+        //存放职位
+        var alljob = [];
+
+        //遍历职位列表信息
+        joblist.find('li').each(function (item) {
+            var job = $(this);
+            //职位名
+            var job_name = job.find('.info-primary .job-title').text();
+            //薪资
+            var job_money= job.find('.red').text();
+            //公司名
+            var company_name  = job.find('.info-company a').text();
+            //类别
+            var company_type = job.find('p').text();
+
+            //存储信息
+            alljob.push({
+                job_name: job_name,
+                job_money: job_money,
+                company_name: company_name,
+                company_type: company_type
+            });
+            console.log(alljob);
+        });
     }else{
         console.log(err);
     }
